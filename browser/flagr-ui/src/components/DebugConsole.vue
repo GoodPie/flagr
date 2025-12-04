@@ -1,8 +1,10 @@
 <template>
   <el-card class="dc-container">
-    <div slot="header" class="el-card-header">
-      <h2>Debug Console</h2>
-    </div>
+    <template #header>
+      <div class="el-card-header">
+        <h2>Debug Console</h2>
+      </div>
+    </template>
     <el-collapse>
       <el-collapse-item title="Evaluation">
         <el-row :gutter="10">
@@ -11,7 +13,7 @@
           </el-col>
           <el-col :span="7" class="evaluation-button-col">
             <el-button
-              size="mini"
+              size="small"
               @click="postEvaluation(evalContext)"
               type="primary"
               plain
@@ -23,20 +25,22 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <vue-json-editor
+            <json-editor-vue
               v-model="evalContext"
-              :showBtns="false"
-              ref="evalContextEditor"
+              mode="text"
+              :mainMenuBar="false"
+              :navigationBar="false"
               class="json-editor"
-            ></vue-json-editor>
+            />
           </el-col>
           <el-col :span="12">
-            <vue-json-editor
+            <json-editor-vue
               v-model="evalResult"
-              :showBtns="false"
-              ref="evalResultEditor"
+              mode="text"
+              :mainMenuBar="false"
+              :navigationBar="false"
               class="json-editor"
-            ></vue-json-editor>
+            />
           </el-col>
         </el-row>
       </el-collapse-item>
@@ -48,7 +52,7 @@
           </el-col>
           <el-col :span="7" class="evaluation-button-col">
             <el-button
-              size="mini"
+              size="small"
               @click="postEvaluationBatch(batchEvalContext)"
               type="primary"
               plain
@@ -60,20 +64,22 @@
         </el-row>
         <el-row :gutter="10">
           <el-col :span="12">
-            <vue-json-editor
+            <json-editor-vue
               v-model="batchEvalContext"
-              :showBtns="false"
-              ref="batchEvalContextEditor"
+              mode="text"
+              :mainMenuBar="false"
+              :navigationBar="false"
               class="json-editor"
-            ></vue-json-editor>
+            />
           </el-col>
           <el-col :span="12">
-            <vue-json-editor
+            <json-editor-vue
               v-model="batchEvalResult"
-              :showBtns="false"
-              ref="batchEvalResultEditor"
+              mode="text"
+              :mainMenuBar="false"
+              :navigationBar="false"
               class="json-editor"
-            ></vue-json-editor>
+            />
           </el-col>
         </el-row>
       </el-collapse-item>
@@ -83,7 +89,7 @@
 
 <script>
 import Axios from "axios";
-import vueJsonEditor from "vue-json-editor";
+import JsonEditorVue from "json-editor-vue";
 
 import constants from "@/constants";
 
@@ -153,13 +159,7 @@ export default {
     }
   },
   components: {
-    vueJsonEditor
-  },
-  mounted() {
-    this.$refs.evalContextEditor.editor.setMode("code");
-    this.$refs.evalResultEditor.editor.setMode("code");
-    this.$refs.batchEvalContextEditor.editor.setMode("code");
-    this.$refs.batchEvalResultEditor.editor.setMode("code");
+    JsonEditorVue
   }
 };
 </script>
