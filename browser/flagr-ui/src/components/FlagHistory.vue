@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-card v-for="diff in diffs" :key="diff.timestamp" class="snapshot-container">
-      <div slot="header" class="el-card-header">
+      <template #header>
+        <div class="el-card-header">
         <el-row>
           <el-col :span="14">
             <div class="diff-snapshot-id-change">
@@ -19,7 +20,8 @@
             </div>
           </el-col>
         </el-row>
-      </div>
+        </div>
+      </template>
       <pre class="diff" v-html="diff.flagDiff"></pre>
     </el-card>
   </div>
