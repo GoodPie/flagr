@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "vite lint"
+    "lint": "eslint src --ext .js,.vue"
   },
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^4.0.0",
@@ -40,8 +40,12 @@
       "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
+    "globals": {
+      "__APP_VERSION__": "readonly"
+    },
     "rules": {
-      "vue/multi-word-component-names": "off"
+      "vue/multi-word-component-names": "off",
+      "vue/no-mutating-props": "off"
     }
   },
   "browserslist": [

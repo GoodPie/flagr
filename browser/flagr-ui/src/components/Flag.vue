@@ -14,10 +14,10 @@
 
         <el-dialog title="Edit distribution" v-model="dialogEditDistributionOpen">
           <DistributionEditor
-            v-if="loaded && flag && selectedSegment"
-            :variants="flag.variants"
-            :distributions="selectedSegment.distributions"
-            @save="handleSaveDistribution"
+              v-if="loaded && flag && selectedSegment"
+              :variants="flag.variants"
+              :distributions="selectedSegment.distributions"
+              @save="handleSaveDistribution"
           />
         </el-dialog>
 
@@ -30,10 +30,11 @@
               <el-slider v-model="newSegment.rolloutPercent" show-input></el-slider>
             </p>
             <el-button
-              class="width--full"
-              :disabled="!newSegment.description"
-              @click.prevent="createSegment"
-            >Create Segment</el-button>
+                class="width--full"
+                :disabled="!newSegment.description"
+                @click.prevent="createSegment"
+            >Create Segment
+            </el-button>
           </div>
         </el-dialog>
 
@@ -46,41 +47,41 @@
           <el-tabs @tab-click="handleHistoryTabClick">
             <el-tab-pane label="Config">
               <FlagConfigCard
-                :flag="flag"
-                :entityTypes="entityTypes"
-                :allowCreateEntityType="allowCreateEntityType"
-                :showMdEditor="showMdEditor"
-                :allTags="allTags"
-                @save="putFlag(flag)"
-                @toggle-enabled="setFlagEnabled"
-                @toggle-md-editor="toggleShowMdEditor"
-                @create-tag="handleCreateTag"
-                @delete-tag="deleteTag"
+                  :flag="flag"
+                  :entityTypes="entityTypes"
+                  :allowCreateEntityType="allowCreateEntityType"
+                  :showMdEditor="showMdEditor"
+                  :allTags="allTags"
+                  @save="putFlag(flag)"
+                  @toggle-enabled="setFlagEnabled"
+                  @toggle-md-editor="toggleShowMdEditor"
+                  @create-tag="handleCreateTag"
+                  @delete-tag="deleteTag"
               />
 
               <VariantsCard
-                :variants="flag.variants"
-                :segments="flag.segments"
-                @create="handleCreateVariant"
-                @update="putVariant"
-                @delete="deleteVariant"
+                  :variants="flag.variants"
+                  :segments="flag.segments"
+                  @create="handleCreateVariant"
+                  @update="putVariant"
+                  @delete="deleteVariant"
               />
 
               <SegmentsCard
-                :segments="flag.segments"
-                :variants="flag.variants"
-                :operatorOptions="operatorOptions"
-                @create="dialogCreateSegmentOpen = true"
-                @update="putSegment"
-                @delete="deleteSegment"
-                @reorder="handleSegmentsReorder"
-                @edit-distribution="editDistribution"
-                @create-constraint="handleCreateConstraint"
-                @update-constraint="handleUpdateConstraint"
-                @delete-constraint="handleDeleteConstraint"
+                  :segments="flag.segments"
+                  :variants="flag.variants"
+                  :operatorOptions="operatorOptions"
+                  @create="dialogCreateSegmentOpen = true"
+                  @update="putSegment"
+                  @delete="deleteSegment"
+                  @reorder="handleSegmentsReorder"
+                  @edit-distribution="editDistribution"
+                  @create-constraint="handleCreateConstraint"
+                  @update-constraint="handleUpdateConstraint"
+                  @delete-constraint="handleDeleteConstraint"
               />
               <debug-console :flag="this.flag"></debug-console>
-              <FlagSettingsCard @delete="dialogDeleteFlagVisible = true" />
+              <FlagSettingsCard @delete="dialogDeleteFlagVisible = true"/>
               <spinner v-if="!loaded"></spinner>
             </el-tab-pane>
 
@@ -114,14 +115,10 @@ import FlagSettingsCard from "./flag/FlagSettingsCard.vue";
 
 const operators = operatorsJson.operators;
 
-const OPERATOR_VALUE_TO_LABEL_MAP = operators.reduce((acc, el) => {
-  acc[el.value] = el.label;
-  return acc;
-}, {});
 
-const { sum, pluck, handleErr } = helpers;
+const {pluck, handleErr} = helpers;
 
-const { API_URL, FLAGR_UI_POSSIBLE_ENTITY_TYPES } = constants;
+const {API_URL, FLAGR_UI_POSSIBLE_ENTITY_TYPES} = constants;
 
 const DEFAULT_SEGMENT = {
   description: "",
@@ -202,7 +199,7 @@ export default {
     deleteFlag() {
       const flagId = this.flagId;
       Axios.delete(`${API_URL}/flags/${this.flagId}`).then(() => {
-        this.$router.replace({ name: "home" });
+        this.$router.replace({name: "home"});
         this.$message.success(`You deleted flag ${flagId}`);
       }, handleErr.bind(this));
     },
@@ -231,8 +228,8 @@ export default {
     },
     handleSaveDistribution(distributions) {
       Axios.put(
-        `${API_URL}/flags/${this.flagId}/segments/${this.selectedSegment.id}/distributions`,
-        { distributions }
+          `${API_URL}/flags/${this.flagId}/segments/${this.selectedSegment.id}/distributions`,
+          {distributions}
       ).then(response => {
         let newDistributions = response.data;
         this.selectedSegment.distributions = newDistributions;
@@ -242,8 +239,8 @@ export default {
     },
     handleCreateVariant(payload) {
       Axios.post(
-        `${API_URL}/flags/${this.flagId}/variants`,
-        payload
+          `${API_URL}/flags/${this.flagId}/variants`,
+          payload
       ).then(response => {
         let variant = response.data;
         this.flag.variants.push(variant);
@@ -252,28 +249,28 @@ export default {
     },
     deleteVariant(variant) {
       const isVariantInUse = this.flag.segments.some(segment =>
-        segment.distributions.some(
-          distribution => distribution.variantID === variant.id
-        )
+          segment.distributions.some(
+              distribution => distribution.variantID === variant.id
+          )
       );
 
       if (isVariantInUse) {
         alert(
-          "This variant is being used by a segment distribution. Please remove the segment or edit the distribution in order to remove this variant."
+            "This variant is being used by a segment distribution. Please remove the segment or edit the distribution in order to remove this variant."
         );
         return;
       }
 
       if (
-        !confirm(
-          `Are you sure you want to delete variant #${variant.id} [${variant.key}]`
-        )
+          !confirm(
+              `Are you sure you want to delete variant #${variant.id} [${variant.key}]`
+          )
       ) {
         return;
       }
 
       Axios.delete(
-        `${API_URL}/flags/${this.flagId}/variants/${variant.id}`
+          `${API_URL}/flags/${this.flagId}/variants/${variant.id}`
       ).then(() => {
         this.$message.success("variant deleted");
         this.fetchFlag();
@@ -285,23 +282,23 @@ export default {
         return;
       }
       Axios.put(
-        `${API_URL}/flags/${this.flagId}/variants/${variant.id}`,
-        variant
+          `${API_URL}/flags/${this.flagId}/variants/${variant.id}`,
+          variant
       ).then(() => {
         this.$message.success("variant updated");
       }, handleErr.bind(this));
     },
     handleCreateTag(payload) {
       Axios.post(`${API_URL}/flags/${this.flagId}/tags`, payload).then(
-        response => {
-          let tag = response.data;
-          if (!this.flag.tags.map(t => t.value).includes(tag.value)) {
-            this.flag.tags.push(tag);
-            this.$message.success("new tag created");
-          }
-          this.loadAllTags();
-        },
-        handleErr.bind(this)
+          response => {
+            let tag = response.data;
+            if (!this.flag.tags.map(t => t.value).includes(tag.value)) {
+              this.flag.tags.push(tag);
+              this.$message.success("new tag created");
+            }
+            this.loadAllTags();
+          },
+          handleErr.bind(this)
       );
     },
     loadAllTags() {
@@ -316,12 +313,12 @@ export default {
       }
 
       Axios.delete(`${API_URL}/flags/${this.flagId}/tags/${tag.id}`).then(
-        () => {
-          this.$message.success("tag deleted");
-          this.fetchFlag();
-          this.loadAllTags();
-        },
-        handleErr.bind(this)
+          () => {
+            this.$message.success("tag deleted");
+            this.fetchFlag();
+            this.loadAllTags();
+          },
+          handleErr.bind(this)
       );
     },
     putSegment(segment) {
@@ -343,10 +340,10 @@ export default {
       this.flag.segments = segments;
       this.putSegmentsReorder(segments);
     },
-    handleCreateConstraint({ segment, constraint }) {
+    handleCreateConstraint({segment, constraint}) {
       Axios.post(
-        `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints`,
-        constraint
+          `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints`,
+          constraint
       ).then(response => {
         let newConstraint = response.data;
         segment.constraints.push(newConstraint);
@@ -354,25 +351,25 @@ export default {
         this.$message.success("new constraint created");
       }, handleErr.bind(this));
     },
-    handleUpdateConstraint({ segment, constraint }) {
+    handleUpdateConstraint({segment, constraint}) {
       constraint.property = constraint.property.trim();
       constraint.value = constraint.value.trim();
       Axios.put(
-        `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints/${constraint.id}`,
-        constraint
+          `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints/${constraint.id}`,
+          constraint
       ).then(() => {
         this.$message.success("constraint updated");
       }, handleErr.bind(this));
     },
-    handleDeleteConstraint({ segment, constraint }) {
+    handleDeleteConstraint({segment, constraint}) {
       if (!confirm("Are you sure you want to delete this constraint?")) {
         return;
       }
       Axios.delete(
-        `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints/${constraint.id}`
+          `${API_URL}/flags/${this.flagId}/segments/${segment.id}/constraints/${constraint.id}`
       ).then(() => {
         const index = segment.constraints.findIndex(
-          c => c.id === constraint.id
+            c => c.id === constraint.id
         );
         segment.constraints.splice(index, 1);
         this.$message.success("constraint deleted");
@@ -384,7 +381,7 @@ export default {
       }
 
       Axios.delete(
-        `${API_URL}/flags/${this.flagId}/segments/${segment.id}`
+          `${API_URL}/flags/${this.flagId}/segments/${segment.id}`
       ).then(() => {
         const index = this.flag.segments.findIndex(el => el.id === segment.id);
         this.flag.segments.splice(index, 1);
@@ -393,8 +390,8 @@ export default {
     },
     createSegment() {
       Axios.post(
-        `${API_URL}/flags/${this.flagId}/segments`,
-        this.newSegment
+          `${API_URL}/flags/${this.flagId}/segments`,
+          this.newSegment
       ).then(response => {
         let segment = response.data;
         processSegment(segment);
@@ -422,17 +419,17 @@ export default {
       function prepareEntityTypes(entityTypes) {
         let arr = entityTypes.map(key => {
           let label = key === "" ? "<null>" : key;
-          return { label: label, value: key };
+          return {label: label, value: key};
         });
         if (entityTypes.indexOf("") === -1) {
-          arr.unshift({ label: "<null>", value: "" });
+          arr.unshift({label: "<null>", value: ""});
         }
         return arr;
       }
 
       if (
-        FLAGR_UI_POSSIBLE_ENTITY_TYPES &&
-        FLAGR_UI_POSSIBLE_ENTITY_TYPES != "null"
+          FLAGR_UI_POSSIBLE_ENTITY_TYPES &&
+          FLAGR_UI_POSSIBLE_ENTITY_TYPES != "null"
       ) {
         let entityTypes = FLAGR_UI_POSSIBLE_ENTITY_TYPES.split(",");
         this.entityTypes = prepareEntityTypes(entityTypes);
