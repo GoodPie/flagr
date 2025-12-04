@@ -567,14 +567,14 @@ import clone from "lodash.clone";
 import draggable from "vuedraggable";
 import Axios from "axios";
 
-import constants from "@/constants";
-import helpers from "@/helpers/helpers";
-import Spinner from "@/components/Spinner";
-import DebugConsole from "@/components/DebugConsole";
-import FlagHistory from "@/components/FlagHistory";
-import MarkdownEditor from "@/components/MarkdownEditor.vue";
+import constants from "../constants";
+import helpers from "../helpers/helpers";
+import Spinner from "./Spinner.vue";
+import DebugConsole from "./DebugConsole.vue";
+import FlagHistory from "./FlagHistory.vue";
+import MarkdownEditor from "./MarkdownEditor.vue";
 import JsonEditorVue from "json-editor-vue";
-import operatorsJson from "@/operators.json";
+import operatorsJson from "../operators.json";
 
 const operators = operatorsJson.operators;
 
@@ -998,146 +998,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-h5 {
-  padding: 0;
-  margin: 10px 0 5px;
-}
-
-.grabbable {
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
-}
-
-.flag-inner-config-card {
-  .el-card__body {
-    padding-bottom: 0px;
-  }
-}
-
-.segment {
-  .highlightable {
-    padding: 4px;
-    &:hover {
-      background-color: #ddd;
-    }
-  }
-  .segment-constraint {
-    margin-bottom: 12px;
-    padding: 1px;
-    background-color: #f6f6f6;
-    border-radius: 5px;
-  }
-  .distribution-card {
-    height: 110px;
-    text-align: center;
-    .el-card__body {
-      padding: 3px 10px 10px 10px;
-    }
-    font-size: 0.9em;
-  }
-}
-
-ol.constraints-inner {
-  background-color: white;
-  padding-left: 8px;
-  padding-right: 8px;
-  border-radius: 3px;
-  border: 1px solid #ddd;
-  li {
-    padding: 3px 0;
-    .el-tag {
-      font-size: 0.7em;
-    }
-  }
-}
-
-.constraints-inputs-container {
-  padding: 5px 0;
-}
-
-.variants-container-inner {
-  .el-card {
-    margin-bottom: 1em;
-  }
-  .el-input-group__prepend {
-    width: 2em;
-  }
-}
-
-.segment-description-rollout {
-  margin-top: 10px;
-}
-
-.edit-distribution-button {
-  margin-top: 5px;
-}
-
-.edit-distribution-alert {
-  margin-top: 10px;
-}
-
-.el-form-item {
-  margin-bottom: 5px;
-}
-
-.id-row {
-  margin-bottom: 8px;
-}
-
-.flag-config-card {
-  .flag-content {
-    margin-top: 8px;
-    margin-bottom: -8px;
-    .el-input-group__prepend {
-      width: 8em;
-    }
-  }
-  .data-records-label {
-    margin-left: 3px;
-    margin-bottom: 5px;
-    margin-top: 6px;
-    font-size: 0.65em;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-}
-
-.variant-attachment-collapsable-title {
-  margin: 0;
-  font-size: 13px;
-  color: #909399;
-  width: 100%;
-}
-
-.variant-attachment-title {
-  margin: 0;
-  font-size: 13px;
-  color: #909399;
-}
-
-.variant-key-input {
-  margin-left: 10px;
-  width: 50%;
-}
-
-.save-remove-variant-row {
-  padding-bottom: 5px;
-}
-
-.tag-key-input {
-  margin: 2.5px;
-  width: 20%;
-}
-
-.tags-container-inner {
-  margin-bottom: 10px;
-}
-
-.button-new-tag {
-  margin: 2.5px;
-}
-</style>

@@ -91,7 +91,7 @@
 import Axios from "axios";
 import JsonEditorVue from "json-editor-vue";
 
-import constants from "@/constants";
+import constants from "../constants";
 
 const { API_URL } = constants;
 

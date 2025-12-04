@@ -150,9 +150,9 @@
 <script>
 import Axios from "axios";
 
-import constants from "@/constants";
-import Spinner from "@/components/Spinner";
-import helpers from "@/helpers/helpers";
+import constants from "../constants";
+import Spinner from "./Spinner.vue";
+import helpers from "../helpers/helpers";
 
 const { handleErr } = helpers;
 
@@ -276,20 +276,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-.flags-container {
-  .el-table {
-    margin-top: 2em;
-  }
-  .el-table__row {
-    cursor: pointer;
-  }
-  .el-button-group .el-button--primary:first-child {
-    border-right-color: #dcdfe6;
-  }
-  .deleted-flags-table {
-    margin-top: 2rem;
-  }
-}
-</style>

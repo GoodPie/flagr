@@ -31,7 +31,7 @@
 import Axios from "axios";
 import { diffJson, convertChangesToXML } from "diff";
 
-import constants from "@/constants";
+import constants from "../constants";
 
 const { API_URL } = constants;
 
@@ -86,27 +86,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less">
-.snapshot-container {
-  .diff-snapshot-id-change {
-    color: white;
-    .el-tag {
-      color: #2e4960;
-      background-color: white;
-    }
-  }
-  .diff {
-    margin: 0;
-    del {
-      background-color: #f7b3b3;
-      text-decoration: none;
-    }
-    ins {
-      background-color: #b6ddc6;
-      text-decoration: none;
-    }
-    overflow-x: auto;
-  }
-}
-</style>
