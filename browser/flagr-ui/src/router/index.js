@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Flags from '../components/Flag.vue'
+import Flags from '../components/Flags.vue'
 import Flag from '../components/Flag.vue'
 
 export default createRouter({
