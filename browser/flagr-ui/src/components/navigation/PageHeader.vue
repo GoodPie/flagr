@@ -13,8 +13,8 @@ const version = __APP_VERSION__ || "1.0.0";
       </div>
 
       <div class="navigation-buttons">
-        <el-button>Docs</el-button>
-        <el-button type="primary">API</el-button>
+        <el-link href="https://openflagr.github.io/flagr">Docs</el-link>
+        <el-link type="primary" href="https://openflagr.github.io/flagr/api_docs">API</el-link>
       </div>
     </template>
   </el-container>
@@ -35,7 +35,7 @@ const version = __APP_VERSION__ || "1.0.0";
 .navigation-buttons {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 12px;
 }
 </style>
 
