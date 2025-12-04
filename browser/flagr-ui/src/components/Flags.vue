@@ -12,10 +12,10 @@
           <el-row>
             <el-col>
               <el-input placeholder="Specific new flag description" v-model="newFlag.description">
-                <template slot="prepend">
+                <template #prepend>
                   <span class="el-icon-plus" />
                 </template>
-                <template slot="append">
+                <template #append>
                   <el-dropdown
                     split-button
                     type="primary"
@@ -24,12 +24,14 @@
                     @click.prevent="createFlag"
                   >
                     Create New Flag
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item
-                        command="simple_boolean_flag"
-                        :disabled="!newFlag.description"
-                      >Create Simple Boolean Flag</el-dropdown-item>
-                    </el-dropdown-menu>
+                    <template #dropdown>
+                      <el-dropdown-menu>
+                        <el-dropdown-item
+                          command="simple_boolean_flag"
+                          :disabled="!newFlag.description"
+                        >Create Simple Boolean Flag</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
                   </el-dropdown>
                 </template>
               </el-input>
@@ -56,7 +58,7 @@
             <el-table-column prop="id" align="center" label="Flag ID" sortable fixed width="95"></el-table-column>
             <el-table-column prop="description" label="Description" min-width="300"></el-table-column>
             <el-table-column prop="tags" label="Tags" min-width="200">
-              <template slot-scope="scope">
+              <template #default="scope">
                 <el-tag
                   v-for="tag in scope.row.tags"
                   :key="tag.id"
@@ -83,7 +85,7 @@
               :filters="[{ text: 'Enabled', value: true }, { text: 'Disabled', value: false }]"
               :filter-method="filterStatus"
             >
-              <template slot-scope="scope">
+              <template #default="scope">
                 <el-tag
                   :type="scope.row.enabled ? 'primary' : 'danger'"
                   disable-transitions
@@ -104,7 +106,7 @@
                 <el-table-column prop="id" align="center" label="Flag ID" sortable fixed width="95"></el-table-column>
                 <el-table-column prop="description" label="Description" min-width="300"></el-table-column>
                 <el-table-column prop="tags" label="Tags" min-width="200">
-                  <template slot-scope="scope">
+                  <template #default="scope">
                     <el-tag
                       v-for="tag in scope.row.tags"
                       :key="tag.id"
@@ -128,7 +130,7 @@
                   fixed="right"
                   width="100"
                 >
-                  <template slot-scope="scope">
+                  <template #default="scope">
                     <el-button
                       @click="restoreFlag(scope.row)"
                       type="warning"
