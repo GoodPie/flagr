@@ -2,15 +2,17 @@
   <el-row>
     <el-col :span="20" :offset="2">
       <div class="container flag-container">
-        <el-dialog title="Delete feature flag" :visible.sync="dialogDeleteFlagVisible">
+        <el-dialog title="Delete feature flag" v-model="dialogDeleteFlagVisible">
           <span>Are you sure you want to delete this feature flag?</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogDeleteFlagVisible = false">Cancel</el-button>
-            <el-button type="primary" @click.prevent="deleteFlag">Confirm</el-button>
-          </span>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="dialogDeleteFlagVisible = false">Cancel</el-button>
+              <el-button type="primary" @click.prevent="deleteFlag">Confirm</el-button>
+            </span>
+          </template>
         </el-dialog>
 
-        <el-dialog title="Edit distribution" :visible.sync="dialogEditDistributionOpen">
+        <el-dialog title="Edit distribution" v-model="dialogEditDistributionOpen">
           <div v-if="loaded && flag">
             <div v-for="variant in flag.variants" :key="'distribution-variant-' + variant.id">
               <div>
@@ -54,7 +56,7 @@
           ></el-alert>
         </el-dialog>
 
-        <el-dialog title="Create segment" :visible.sync="dialogCreateSegmentOpen">
+        <el-dialog title="Create segment" v-model="dialogCreateSegmentOpen">
           <div>
             <p>
               <el-input placeholder="Segment description" v-model="newSegment.description"></el-input>
@@ -79,25 +81,27 @@
           <el-tabs @tab-click="handleHistoryTabClick">
             <el-tab-pane label="Config">
               <el-card class="flag-config-card">
-                <div slot="header" class="el-card-header">
-                  <div class="flex-row">
-                    <div class="flex-row-left">
-                      <h2>Flag</h2>
-                    </div>
-                    <div class="flex-row-right" v-if="flag">
-                      <el-tooltip content="Enable/Disable Flag" placement="top" effect="light">
-                        <el-switch
-                          v-model="flag.enabled"
-                          active-color="#13ce66"
-                          inactive-color="#ff4949"
-                          @change="setFlagEnabled"
-                          :active-value="true"
-                          :inactive-value="false"
-                        ></el-switch>
-                      </el-tooltip>
+                <template #header>
+                  <div class="el-card-header">
+                    <div class="flex-row">
+                      <div class="flex-row-left">
+                        <h2>Flag</h2>
+                      </div>
+                      <div class="flex-row-right" v-if="flag">
+                        <el-tooltip content="Enable/Disable Flag" placement="top" effect="light">
+                          <el-switch
+                            v-model="flag.enabled"
+                            active-color="#13ce66"
+                            inactive-color="#ff4949"
+                            @change="setFlagEnabled"
+                            :active-value="true"
+                            :inactive-value="false"
+                          ></el-switch>
+                        </el-tooltip>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </template>
                 <el-card shadow="hover" :class="toggleInnerConfigCard">
                   <div class="flex-row id-row">
                     <div class="flex-row-left">
@@ -115,7 +119,7 @@
                       <el-row>
                         <el-col :span="24">
                           <el-input size="small" placeholder="Key" v-model="flag.key">
-                            <template slot="prepend">Flag Key</template>
+                            <template #prepend>Flag Key</template>
                           </el-input>
                         </el-col>
                       </el-row>
@@ -153,7 +157,7 @@
                             placeholder="Description"
                             v-model="flag.description"
                           >
-                            <template slot="prepend">Flag Description</template>
+                            <template #prepend>Flag Description</template>
                           </el-input>
                         </el-col>
                       </el-row>
@@ -163,7 +167,7 @@
                         <el-select
                           v-show="!!flag.dataRecordsEnabled"
                           v-model="flag.entityType"
-                          size="mini"
+                          size="small"
                           filterable
                           :allow-create="allowCreateEntityType"
                           default-first-option
@@ -194,7 +198,7 @@
                   <el-row style="margin: 10px;">
                     <h5>
                       <span style="margin-right: 10px;">Flag Notes</span>
-                      <el-button round size="mini" @click="toggleShowMdEditor">
+                      <el-button round size="small" @click="toggleShowMdEditor">
                         <span :class="editViewIcon"></span>
                         {{ !this.showMdEditor ? "edit" : "view" }}
                       </el-button>
@@ -203,7 +207,7 @@
                   <el-row>
                     <markdown-editor
                       :showEditor="this.showMdEditor"
-                      :markdown.sync="flag.notes"
+                      v-model:markdown="flag.notes"
                       @save="putFlag(flag)"
                     ></markdown-editor>
                   </el-row>
@@ -226,12 +230,12 @@
                         v-if="tagInputVisible"
                         v-model="newTag.value"
                         ref="saveTagInput"
-                        size="mini"
+                        size="small"
                         :trigger-on-focus="false"
                         :fetch-suggestions="queryTags"
                         @select="createTag"
-                        @keyup.enter.native="createTag"
-                        @keyup.esc.native="cancelCreateTag"
+                        @keyup.enter="createTag"
+                        @keyup.esc="cancelCreateTag"
                       ></el-autocomplete>
                       <el-button
                         v-else
@@ -245,9 +249,11 @@
               </el-card>
 
               <el-card class="variants-container">
-                <div slot="header" class="clearfix">
-                  <h2>Variants</h2>
-                </div>
+                <template #header>
+                  <div class="clearfix">
+                    <h2>Variants</h2>
+                  </div>
+                </template>
                 <div class="variants-container-inner" v-if="flag.variants.length">
                   <div v-for="variant in flag.variants" :key="variant.id">
                     <el-card shadow="hover">
@@ -263,11 +269,10 @@
                             placeholder="Key"
                             v-model="variant.key"
                           >
-                            <template slot="prepend">Key</template>
+                            <template #prepend>Key</template>
                           </el-input>
                           <div class="flex-row-right save-remove-variant-row">
                             <el-button
-                              slot="append"
                               size="small"
                               @click="putVariant(variant)"
                             >Save Variant</el-button>
@@ -284,14 +289,14 @@
                             <p
                               class="variant-attachment-title"
                             >You can add JSON in key/value pairs format.</p>
-                            <vue-json-editor
+                            <json-editor-vue
                               v-model="variant.attachment"
-                              :showBtns="false"
-                              :mode="'code'"
-                              v-on:has-error="variant.attachmentValid = false"
-                              v-on:input="variant.attachmentValid = true"
+                              mode="text"
+                              :mainMenuBar="false"
+                              :navigationBar="false"
+                              @update:modelValue="variant.attachmentValid = true"
                               class="variant-attachment-content"
-                            ></vue-json-editor>
+                            />
                           </el-collapse-item>
                         </el-collapse>
                       </el-form>
@@ -314,30 +319,30 @@
               </el-card>
 
               <el-card class="segments-container">
-                <div slot="header" class="el-card-header">
-                  <div class="flex-row">
-                    <div class="flex-row-left">
-                      <h2>Segments</h2>
-                    </div>
-                    <div class="flex-row-right">
-                      <el-tooltip
-                        content="You can drag and drop segments to reorder"
-                        placement="top"
-                        effect="light"
-                      >
-                        <el-button @click="putSegmentsReorder(flag.segments)">Reorder</el-button>
-                      </el-tooltip>
-                      <el-button @click="dialogCreateSegmentOpen = true">New Segment</el-button>
+                <template #header>
+                  <div class="el-card-header">
+                    <div class="flex-row">
+                      <div class="flex-row-left">
+                        <h2>Segments</h2>
+                      </div>
+                      <div class="flex-row-right">
+                        <el-tooltip
+                          content="You can drag and drop segments to reorder"
+                          placement="top"
+                          effect="light"
+                        >
+                          <el-button @click="putSegmentsReorder(flag.segments)">Reorder</el-button>
+                        </el-tooltip>
+                        <el-button @click="dialogCreateSegmentOpen = true">New Segment</el-button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </template>
                 <div class="segments-container-inner" v-if="flag.segments.length">
-                  <draggable v-model="flag.segments" @start="drag = true" @end="drag = false">
-                    <transition-group>
+                  <draggable v-model="flag.segments" item-key="id" @start="drag = true" @end="drag = false">
+                    <template #item="{ element: segment }">
                       <el-card
                         shadow="hover"
-                        v-for="segment in flag.segments"
-                        :key="segment.id"
                         class="segment grabbable"
                       >
                         <div class="flex-row id-row">
@@ -349,7 +354,6 @@
                           </div>
                           <div class="flex-row-right">
                             <el-button
-                              slot="append"
                               size="small"
                               @click="putSegment(segment)"
                             >Save Segment Setting</el-button>
@@ -365,7 +369,7 @@
                               placeholder="Description"
                               v-model="segment.description"
                             >
-                              <template slot="prepend">Description</template>
+                              <template #prepend>Description</template>
                             </el-input>
                           </el-col>
                           <el-col :span="9">
@@ -377,8 +381,8 @@
                               :min="0"
                               :max="100"
                             >
-                              <template slot="prepend">Rollout</template>
-                              <template slot="append">%</template>
+                              <template #prepend>Rollout</template>
+                              <template #append>%</template>
                             </el-input>
                           </el-col>
                         </el-row>
@@ -395,7 +399,7 @@
                                         placeholder="Property"
                                         v-model="constraint.property"
                                       >
-                                        <template slot="prepend">Property</template>
+                                        <template #prepend>Property</template>
                                       </el-input>
                                     </el-col>
                                     <el-col :span="4">
@@ -415,7 +419,7 @@
                                     </el-col>
                                     <el-col :span="20">
                                       <el-input size="small" v-model="constraint.value">
-                                        <template slot="prepend">Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</template>
+                                        <template #prepend>Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</template>
                                       </el-input>
                                     </el-col>
                                     <el-col :span="2">
@@ -496,7 +500,7 @@
                           <el-col :span="24" class="segment-distributions">
                             <h5>
                               <span>Distribution</span>
-                              <el-button round size="mini" @click="editDistribution(segment)">
+                              <el-button round size="small" @click="editDistribution(segment)">
                                 <span class="el-icon-edit"></span> edit
                               </el-button>
                             </h5>
@@ -528,16 +532,18 @@
                           </el-col>
                         </el-row>
                       </el-card>
-                    </transition-group>
+                    </template>
                   </draggable>
                 </div>
                 <div class="card--error" v-else>No segments created for this feature flag yet</div>
               </el-card>
               <debug-console :flag="this.flag"></debug-console>
               <el-card>
-                <div slot="header" class="el-card-header">
-                  <h2>Flag Settings</h2>
-                </div>
+                <template #header>
+                  <div class="el-card-header">
+                    <h2>Flag Settings</h2>
+                  </div>
+                </template>
                 <el-button @click="dialogDeleteFlagVisible = true" type="danger" plain>
                   <span class="el-icon-delete"></span>
                   Delete Flag
@@ -567,8 +573,10 @@ import Spinner from "@/components/Spinner";
 import DebugConsole from "@/components/DebugConsole";
 import FlagHistory from "@/components/FlagHistory";
 import MarkdownEditor from "@/components/MarkdownEditor.vue";
-import vueJsonEditor from "vue-json-editor";
-import { operators } from "@/operators.json";
+import JsonEditorVue from "json-editor-vue";
+import operatorsJson from "@/operators.json";
+
+const operators = operatorsJson.operators;
 
 const OPERATOR_VALUE_TO_LABEL_MAP = operators.reduce((acc, el) => {
   acc[el.value] = el.label;
@@ -623,7 +631,7 @@ export default {
     flagHistory: FlagHistory,
     draggable: draggable,
     MarkdownEditor,
-    vueJsonEditor
+    JsonEditorVue
   },
   data() {
     return {
@@ -721,22 +729,18 @@ export default {
           variantKey: variant.key,
           variantID: variant.id
         });
-        this.$set(this.newDistributions, variant.id, distribution);
+        this.newDistributions[variant.id] = distribution;
       } else {
-        this.$delete(this.newDistributions, variant.id);
+        delete this.newDistributions[variant.id];
       }
     },
     editDistribution(segment) {
       this.selectedSegment = segment;
 
-      this.$set(this, "newDistributions", {});
+      this.newDistributions = {};
 
       segment.distributions.forEach(distribution => {
-        this.$set(
-          this.newDistributions,
-          distribution.variantID,
-          clone(distribution)
-        );
+        this.newDistributions[distribution.variantID] = clone(distribution);
       });
 
       this.dialogEditDistributionOpen = true;
